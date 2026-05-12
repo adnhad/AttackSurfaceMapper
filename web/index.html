@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attack Surface Mapper</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <p class="eyebrow">Android Attack Surface Mapper</p>
+      <h1>Drop an APK or decoded manifest and get a readable attack surface report.</h1>
+      <p class="lede">
+        The app extracts exported components, permissions, intent filters, deep links, risky exposure patterns,
+        a surface risk score, concrete remediation advice, and a Mermaid graph you can reuse elsewhere.
+      </p>
+    </section>
+
+    <section class="panel upload-panel">
+      <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload APK or manifest">
+        <input id="fileInput" type="file" accept=".apk,.xml" hidden>
+        <div class="drop-icon">APK</div>
+        <div>
+          <h2>Upload target</h2>
+          <p>Drag and drop an <code>.apk</code> or <code>AndroidManifest.xml</code>, or browse from disk.</p>
+        </div>
+        <div class="actions">
+          <button id="browseButton" class="ghost-button" type="button">Browse file</button>
+          <button id="analyzeButton" class="primary-button" type="button" disabled>Analyze attack surface</button>
+        </div>
+        <p id="selectedFile" class="selected-file">No file selected yet.</p>
+      </div>
+      <p id="status" class="status">Waiting for input.</p>
+    </section>
+
+    <section id="results" class="results hidden">
+      <div class="metrics-grid">
+        <article class="panel metric-card">
+          <p class="metric-label">Surface Risk</p>
+          <div class="metric-value-wrap">
+            <span id="riskScore" class="metric-value">0</span>
+            <span class="metric-scale">/100</span>
+          </div>
+          <p id="riskLevel" class="metric-chip metric-chip-low">LOW</p>
+        </article>
+
+        <article class="panel summary-card">
+          <p class="metric-label">What we found</p>
+          <div id="summaryStats" class="summary-stats"></div>
+        </article>
+      </div>
+
+      <div class="report-grid">
+        <article class="panel">
+          <div class="section-heading">
+            <h2>Risky patterns</h2>
+            <p>Why the current exposure matters.</p>
+          </div>
+          <div id="findingsList" class="stack"></div>
+        </article>
+
+        <article class="panel">
+          <div class="section-heading">
+            <h2>Recommendations</h2>
+            <p>Concrete fixes to reduce attack surface.</p>
+          </div>
+          <ol id="recommendationsList" class="recommendations"></ol>
+        </article>
+      </div>
+
+      <div class="report-grid graph-row">
+        <article class="panel">
+          <div class="section-heading">
+            <h2>Component map</h2>
+            <p>Components, intents and permissions rendered from the generated Mermaid graph.</p>
+          </div>
+          <div id="graphRender" class="graph-render">Graph will appear after analysis.</div>
+        </article>
+
+        <article class="panel">
+          <div class="section-heading">
+            <h2>Mermaid source</h2>
+            <p>Ready to paste into docs or reports.</p>
+          </div>
+          <pre id="mermaidSource" class="code-block"></pre>
+        </article>
+      </div>
+
+      <article class="panel">
+        <div class="section-heading">
+          <h2>Exported components</h2>
+          <p>Quick inventory of exposed entry points and their guards.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+            <tr>
+              <th>Type</th>
+              <th>Name</th>
+              <th>Exported</th>
+              <th>Permission</th>
+              <th>Intent / data</th>
+            </tr>
+            </thead>
+            <tbody id="componentsTable"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

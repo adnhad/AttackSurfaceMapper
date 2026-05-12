@@ -1,0 +1,192 @@
+\documentclass[preprint,12pt,a4paper]{elsarticle}
+
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+
+\journal{SoftwareX}
+
+\begin{document}
+\renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}}
+
+\begin{frontmatter}
+
+\title{Attack Surface Mapper: A lightweight Android manifest and APK attack surface analysis tool}
+
+\author{[Student Name 1]}
+\author{[Student Name 2]}
+\address{[Department / School], [University], [City], [Country]}
+
+\begin{abstract}
+Attack Surface Mapper is a lightweight Java-based tool for the static inspection of Android application exposure from either a decoded \texttt{AndroidManifest.xml} file or a packaged APK. The software extracts activities, services, broadcast receivers, and content providers; identifies exported components, permissions, intent filters, and deep links; and highlights risky patterns such as exported components without permission guards, overly permissive \texttt{FileProvider}-like configurations, and enabled application backup. The tool also computes a heuristic surface-risk score, produces human-readable remediation guidance, and generates a Mermaid component graph. A local web interface supports drag-and-drop upload and immediate report generation, making the tool suitable for teaching, secure development reviews, and lightweight pre-audit triage.
+\end{abstract}
+
+\begin{keyword}
+Android security \sep attack surface analysis \sep APK analysis \sep static analysis \sep secure software engineering
+\end{keyword}
+
+\end{frontmatter}
+
+\section*{Required Metadata}
+
+\section*{Current code version}
+
+Ancillary data table required for subversion of the codebase. Kindly replace placeholders in the right column with your final project metadata before submission.
+
+\begin{table}[!h]
+\begin{tabular}{|l|p{6.2cm}|p{6.2cm}|}
+\hline
+\textbf{Nr.} & \textbf{Code metadata description} & \textbf{Please fill in this column} \\
+\hline
+C1 & Current code version & v0.1 (course project prototype, May 2026) \\
+\hline
+C2 & Permanent GitHub link to code/repository used for this code version & \textbf{TO FILL:} add the final GitHub repository URL before submission. \\
+\hline
+C3 & Legal Code License & \textbf{TO FILL:} choose a project license, e.g. MIT or Apache-2.0. \\
+\hline
+C4 & Code versioning system used & Git recommended. Current local prototype was developed outside a git repository and should be migrated to GitHub before submission. \\
+\hline
+C5 & Software code languages, tools, and services used & Java, HTML, CSS, JavaScript, Mermaid, Java built-in \texttt{HttpServer}. \\
+\hline
+C6 & Compilation requirements, operating environments \& dependencies & Modern JDK for compilation and execution; tested from the command line on Windows. No external backend dependency is required. Mermaid rendering in the browser currently uses a CDN. \\
+\hline
+C7 & If available Link to developer documentation/manual & \textbf{TO FILL:} GitHub README link or project manual link. \\
+\hline
+C8 & Support email for questions & \textbf{TO FILL:} project or student contact email. \\
+\hline
+\end{tabular}
+\caption{Code metadata (mandatory)}
+\end{table}
+
+\textbf{Main text}\\
+
+\begin{enumerate}
+
+\item \textbf{Motivation and significance}
+
+Android applications expose multiple externally reachable entry points through activities, services, broadcast receivers, content providers, permissions, and deep links. In practice, many security weaknesses do not originate from advanced exploitation techniques but from an unnecessarily broad or poorly documented attack surface. Exported components without permission guards, permissive content providers, browsable deep links, and backup-enabled applications can all increase the probability of abuse, data leakage, or privilege misuse. These issues are especially relevant in educational settings and lightweight security reviews, where analysts often need a fast first-pass understanding before using larger reverse-engineering suites.
+
+Attack Surface Mapper was developed to address this need. The software focuses on rapid extraction and explanation of Android exposure directly from either a decoded manifest or an APK. Instead of returning only raw metadata, it transforms the manifest structure into an analyst-oriented report containing a risk score, findings, remediation advice, and a graph view. This makes the tool useful for secure coding exercises, software assurance courses, and preliminary security triage.
+
+The intended usage setting is straightforward. A user launches the local web application, drags and drops an APK or a decoded \texttt{AndroidManifest.xml} file, and receives a report summarizing the exported surface and its associated risks. This workflow minimizes friction for students and early-stage reviewers who may not be comfortable with command-line-only tooling.
+
+The project is related to static Android security analysis research and practice, particularly tools that inspect manifest configurations, exported components, inter-component communication, and URI-based entry points. Unlike full-featured reverse-engineering frameworks, this software deliberately emphasizes explainability, lightweight deployment, and immediate visual reporting.
+
+\item \textbf{Software description}
+
+\begin{enumerate}
+    \item \textbf{Software architecture}
+
+    The software follows a compact multi-layer architecture implemented primarily in Java:
+
+    \begin{itemize}
+        \item an input layer that accepts either an APK or a decoded XML manifest;
+        \item a parsing layer that reads plain XML manifests or decodes Android binary XML from APK archives;
+        \item a modeling layer that normalizes components, permissions, intent filters, data specifications, and application-wide properties such as backup and debug settings;
+        \item an analysis layer that derives findings and computes a heuristic attack-surface risk score;
+        \item a reporting layer that generates structured JSON, a textual report, remediation recommendations, and a Mermaid graph;
+        \item a presentation layer that exposes the results through a local web interface with drag-and-drop upload.
+    \end{itemize}
+
+    The backend entry point is implemented in \texttt{Main.java}. The class \texttt{ManifestLoader} routes the input either to XML parsing or APK manifest extraction. \texttt{BinaryXmlParser} decodes Android binary XML when the manifest is stored in compact APK form. \texttt{ManifestModelParser} constructs a normalized in-memory representation of the application surface. \texttt{AttackSurfaceAnalyzer} applies heuristic rules and scoring, and \texttt{MermaidGraphBuilder} produces a graph description that is rendered in the browser. The local web server is implemented in \texttt{SimpleWebServer}, while the frontend uses HTML, CSS, and JavaScript.
+
+    \item \textbf{Software functionalities}
+
+    The current prototype offers the following major functionalities:
+
+    \begin{itemize}
+        \item extraction of Android activities, services, receivers, providers, and activity aliases;
+        \item identification of exported status, component permissions, read/write permissions, authorities, intent filters, and deep-link data specifications;
+        \item detection of risky patterns including exported components without guards, browsable deep links, backup enabled, debuggable builds, exported providers with broad URI grants, and suspicious \texttt{FileProvider}-like configurations;
+        \item computation of a heuristic surface-risk score on a scale from 0 to 100;
+        \item automatic generation of analyst-readable explanations describing why a pattern is risky and how to reduce exposure;
+        \item generation of Mermaid graph source and a rendered component map showing relations between components, intents, permissions, and deep links;
+        \item a local web interface allowing users to upload an APK or manifest and obtain a report without manual preprocessing.
+    \end{itemize}
+
+    The risk score is feature-based rather than data-driven. Higher scores are assigned to exported components, providers, deep links, permissive URI grants, backup-enabled applications, and debuggable builds. Permission-protected components reduce the score relative to unprotected exported entries.
+
+    \item \textbf{Sample code snippets analysis (optional)}
+
+    A typical execution flow is:
+
+    \begin{itemize}
+        \item compile the backend with \texttt{javac -d out src\textbackslash*.java};
+        \item launch the web application with \texttt{java -cp out Main};
+        \item open the local interface and upload an APK or \texttt{AndroidManifest.xml};
+        \item review the generated score, findings, recommendations, and graph.
+    \end{itemize}
+\end{enumerate}
+
+\item \textbf{Illustrative examples}
+
+An illustrative example is the analysis of an Android application exposing a browsable activity through an HTTPS deep link while leaving \texttt{android:allowBackup="true"} enabled. After upload, the software extracts the activity, its intent filter, and the URI pattern, then reports that the component is externally reachable, accepts browsable input, and is not protected by a permission gate. The system simultaneously flags backup exposure at the application level.
+
+The resulting report contains:
+
+\begin{itemize}
+    \item a medium or high attack-surface score depending on the rest of the manifest;
+    \item findings such as ``Activity exported without protection'' and ``Browsable deep link exposed'';
+    \item remediation steps such as disabling export when unnecessary, adding a signature-level permission, narrowing accepted hosts and paths, and validating incoming URI data;
+    \item a component map showing the relationship between the activity, its intent filter, its categories, and the deep-link specification.
+\end{itemize}
+
+This example demonstrates the intended value of the tool: translating raw manifest declarations into an actionable explanation suitable for students, reviewers, or developers performing an early security check.
+
+\item \textbf{Impact}
+
+Attack Surface Mapper enables several useful lines of work. First, it helps formulate new research and teaching questions around explainable security tooling: how much detail is necessary to help beginners understand Android exposure, and which graph abstractions best support secure design reviews. Second, it supports existing work on Android application hardening by reducing the effort needed to identify a first set of manifest-level weaknesses.
+
+Relative to manual manifest inspection, the software improves productivity in several ways. It centralizes extraction, scoring, explanation, and graph generation in a single workflow. It also lowers the barrier to entry for users who are not yet comfortable with reverse-engineering tools such as larger APK analysis frameworks. The browser-based interface is particularly useful in classrooms, demonstrations, and short review sessions because it avoids a multi-tool setup and allows immediate interaction with the uploaded artifact.
+
+In day-to-day use, the tool can change practice by encouraging developers and students to think of exported components as a graph of reachable entry points rather than isolated manifest lines. This graph-centered perspective helps communicate architectural risk more clearly than a purely textual manifest diff.
+
+At the current stage, the software should be described as a prototype rather than a widely deployed platform. No public download statistics or industrial adoption data are available yet. However, its value for education, secure mobile development exercises, and early-stage application triage is already evident from the implemented workflow and outputs.
+
+\item \textbf{Conclusions}
+
+Attack Surface Mapper is a lightweight static-analysis tool for Android application exposure that combines manifest parsing, APK manifest decoding, rule-based risk detection, heuristic scoring, remediation guidance, and Mermaid-based graph generation in a single local application. Its main contribution is not only the extraction of security-relevant metadata but also the transformation of that metadata into an understandable and actionable report. The project is well suited to educational use, lightweight secure development reviews, and preliminary Android application triage. Future work includes repository publication, expanded pattern coverage, richer graph interaction, and validation on a larger benchmark of APKs.
+
+\end{enumerate}
+
+\section*{Acknowledgements}
+
+The authors thank their course instructor and peers for feedback on the project requirements and user-facing reporting expectations.
+
+\begin{thebibliography}{00}
+
+\bibitem{androidmanifest}
+Android Developers, App manifest overview, \url{https://developer.android.com/guide/topics/manifest/manifest-intro}.
+
+\bibitem{androidsecurity}
+Android Developers, Security best practices, \url{https://developer.android.com/topic/security/best-practices}.
+
+\bibitem{deeplinks}
+Android Developers, Create deep links to app content, \url{https://developer.android.com/training/app-links/deep-linking}.
+
+\bibitem{softwarex}
+SoftwareX, Guide for Authors, \url{https://www.sciencedirect.com/journal/softwarex/publish/guide-for-authors}.
+
+\end{thebibliography}
+
+\section*{Current executable software version}
+
+\begin{table}[!h]
+\begin{tabular}{|l|p{12cm}|}
+\hline
+\textbf{Item} & \textbf{Description} \\
+\hline
+Executable entry point & \texttt{java -cp out Main} for the web application, or \texttt{java -cp out Main <input.apk>} for CLI analysis. \\
+\hline
+Default local URL & \texttt{http://127.0.0.1:8080} \\
+\hline
+User interaction model & Drag-and-drop or file upload of APK / XML manifest, followed by automatic report generation. \\
+\hline
+\end{tabular}
+\caption{Executable software summary}
+\end{table}
+
+\end{document}
