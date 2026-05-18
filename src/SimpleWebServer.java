@@ -17,6 +17,7 @@ import java.util.concurrent.Executors;
 public final class SimpleWebServer {
     private static final int DEFAULT_PORT = 8080;
     private static final Path WEB_ROOT = Path.of("web");
+    private static final String BIND_HOST = "0.0.0.0";
 
     private final HttpServer server;
 
@@ -25,7 +26,7 @@ public final class SimpleWebServer {
     }
 
     public static SimpleWebServer start(int port) throws IOException {
-        HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", port), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(BIND_HOST, port), 0);
         server.createContext("/api/health", new HealthHandler());
         server.createContext("/api/analyze", new AnalyzeHandler());
         server.createContext("/", new StaticHandler());

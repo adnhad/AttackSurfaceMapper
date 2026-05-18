@@ -1,0 +1,9 @@
+services:
+  attack-surface-mapper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: attack-surface-mapper
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
