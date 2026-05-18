@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attack Surface Mapper · Graph</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="graph">
+  <div class="shell">
+    <header class="topbar panel">
+      <div class="brand">
+        <div class="brand-mark">ASM</div>
+        <div>
+          <p class="eyebrow">Android Security</p>
+          <h1>Attack Surface Mapper</h1>
+        </div>
+      </div>
+      <nav class="topnav">
+        <a class="nav-link" href="/index.html">Overview</a>
+        <a class="nav-link" href="/components.html">Components</a>
+        <a class="nav-link active" href="/graph.html">Graph</a>
+        <a class="nav-link" href="/findings.html">Findings</a>
+        <a class="nav-link" href="/recommendations.html">Recommendations</a>
+      </nav>
+      <div id="artifactBadge" class="artifact-badge muted">No artifact loaded</div>
+    </header>
+
+    <main class="page-stack">
+      <section class="panel page-intro">
+        <p class="eyebrow">Graph</p>
+        <h2>Visualize the relations between components, permissions and deep-link entry points.</h2>
+        <p class="lede">This page is dedicated to the graph so it can breathe instead of fighting for space with the rest of the dashboard.</p>
+      </section>
+
+      <section id="emptyState" class="panel empty-panel">
+        <h3>No analyzed artifact in memory yet.</h3>
+        <p>Go back to the overview page, upload an APK or manifest, and then return here.</p>
+        <a class="quick-link inline" href="/index.html">Go to overview</a>
+      </section>
+
+      <section id="results" class="hidden">
+        <section class="panel graph-page-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Rendered graph</p>
+              <h3>Component map</h3>
+            </div>
+            <button id="copyMermaidButton" class="ghost-button" type="button">Copy Mermaid</button>
+          </div>
+          <div id="graphRender" class="graph-render">Graph will appear after analysis.</div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Source</p>
+              <h3>Mermaid graph code</h3>
+            </div>
+          </div>
+          <pre id="mermaidSource" class="code-block"></pre>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

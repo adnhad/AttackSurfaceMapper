@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attack Surface Mapper · Components</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="components">
+  <div class="shell">
+    <header class="topbar panel">
+      <div class="brand">
+        <div class="brand-mark">ASM</div>
+        <div>
+          <p class="eyebrow">Android Security</p>
+          <h1>Attack Surface Mapper</h1>
+        </div>
+      </div>
+      <nav class="topnav">
+        <a class="nav-link" href="/index.html">Overview</a>
+        <a class="nav-link active" href="/components.html">Components</a>
+        <a class="nav-link" href="/graph.html">Graph</a>
+        <a class="nav-link" href="/findings.html">Findings</a>
+        <a class="nav-link" href="/recommendations.html">Recommendations</a>
+      </nav>
+      <div id="artifactBadge" class="artifact-badge muted">No artifact loaded</div>
+    </header>
+
+    <main class="page-stack">
+      <section class="panel page-intro">
+        <p class="eyebrow">Inventory</p>
+        <h2>Review the components that make up the Android attack surface.</h2>
+        <p class="lede">Use the filters below to focus on exported, unprotected, or deep-link-enabled components.</p>
+      </section>
+
+      <section id="emptyState" class="panel empty-panel">
+        <h3>No analyzed artifact in memory yet.</h3>
+        <p>Go back to the overview page, upload an APK or manifest, and then return here.</p>
+        <a class="quick-link inline" href="/index.html">Go to overview</a>
+      </section>
+
+      <section id="results" class="hidden">
+        <section class="panel controls-panel">
+          <div class="component-controls">
+            <input id="componentSearch" class="search-input" type="search" placeholder="Filter components...">
+            <select id="componentFilter" class="select-input">
+              <option value="ALL">All components</option>
+              <option value="EXPORTED">Exported only</option>
+              <option value="UNPROTECTED">Exported with no permission</option>
+              <option value="DEEPLINK">Deep links only</option>
+            </select>
+          </div>
+        </section>
+
+        <section class="page-split">
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Cards</p>
+                <h3>Component explorer</h3>
+              </div>
+            </div>
+            <div id="componentCards" class="component-grid"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Matrix</p>
+                <h3>Exported component matrix</h3>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Name</th>
+                  <th>Exported</th>
+                  <th>Permission</th>
+                  <th>Intent / data</th>
+                </tr>
+                </thead>
+                <tbody id="componentsTable"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

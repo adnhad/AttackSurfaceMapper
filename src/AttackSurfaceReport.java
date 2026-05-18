@@ -126,11 +126,42 @@ public class AttackSurfaceReport {
                 + "}")
             .collect(Collectors.joining(","));
 
+        long exportedCount = model.components.stream().filter(component -> component.exported).count();
+        long deepLinkCount = model.components.stream()
+            .flatMap(component -> component.intentFilters.stream())
+            .flatMap(filter -> filter.dataSpecs.stream())
+            .filter(AttackSurfaceModel.DataSpec::isDeepLink)
+            .count();
+        long permissionProtectedCount = model.components.stream()
+            .filter(component -> !component.permission.isEmpty()
+                || !component.readPermission.isEmpty()
+                || !component.writePermission.isEmpty())
+            .count();
+        long providerCount = model.components.stream()
+            .filter(component -> component.type == AttackSurfaceModel.ComponentType.PROVIDER)
+            .count();
+
         return "{"
             + "\"source\":\"" + escape(model.sourceName) + "\","
             + "\"package\":\"" + escape(model.packageName) + "\","
             + "\"riskScore\":" + riskScore + ","
             + "\"riskLevel\":\"" + riskLevel() + "\","
+            + "\"appConfig\":{"
+                + "\"allowBackup\":" + model.allowBackup + ","
+                + "\"debuggable\":" + model.debuggable + ","
+                + "\"fullBackupOnly\":" + model.fullBackupOnly + ","
+                + "\"backupAgent\":\"" + escape(model.backupAgent) + "\""
+            + "},"
+            + "\"summary\":{"
+                + "\"componentCount\":" + model.components.size() + ","
+                + "\"exportedCount\":" + exportedCount + ","
+                + "\"deepLinkCount\":" + deepLinkCount + ","
+                + "\"permissionCount\":" + model.usesPermissions.size() + ","
+                + "\"permissionProtectedCount\":" + permissionProtectedCount + ","
+                + "\"providerCount\":" + providerCount + ","
+                + "\"findingCount\":" + findings.size()
+            + "},"
+            + "\"usesPermissions\":" + JsonModelWriter.stringsToJson(model.usesPermissions) + ","
             + "\"components\":" + JsonModelWriter.componentsToJson(model.components) + ","
             + "\"findings\":[" + findingsJson + "],"
             + "\"recommendations\":[" + recommendations().stream()

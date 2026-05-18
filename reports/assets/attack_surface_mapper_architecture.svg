@@ -1,0 +1,182 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="980" viewBox="0 0 1600 980" role="img" aria-labelledby="title desc">
+  <title id="title">Attack Surface Mapper Architecture and Analysis Pipeline</title>
+  <desc id="desc">Diagram showing the local frontend, Java backend, manifest parsing pipeline, analysis engine, scoring, findings, and reporting outputs for Attack Surface Mapper.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f7efe6"/>
+      <stop offset="55%" stop-color="#f5ecdf"/>
+      <stop offset="100%" stop-color="#efe4d3"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fffaf4"/>
+      <stop offset="100%" stop-color="#f8efe3"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#e9724c"/>
+      <stop offset="100%" stop-color="#d95d39"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#caa98a" flood-opacity="0.22"/>
+    </filter>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="11" refY="7" orient="auto">
+      <path d="M0,0 L14,7 L0,14 z" fill="#b85d3a"/>
+    </marker>
+    <style>
+      .title { font: 700 38px 'Segoe UI', Arial, sans-serif; fill: #202735; }
+      .subtitle { font: 500 18px 'Segoe UI', Arial, sans-serif; fill: #667085; }
+      .section { font: 700 15px 'Segoe UI', Arial, sans-serif; fill: #b4532f; letter-spacing: 4px; }
+      .panel-title { font: 700 24px 'Segoe UI', Arial, sans-serif; fill: #202735; }
+      .box-title { font: 700 18px 'Segoe UI', Arial, sans-serif; fill: #202735; }
+      .box-text { font: 500 14px 'Segoe UI', Arial, sans-serif; fill: #536174; }
+      .small { font: 500 13px 'Segoe UI', Arial, sans-serif; fill: #667085; }
+      .chip { font: 700 12px 'Segoe UI', Arial, sans-serif; fill: #b4532f; }
+      .box { fill: #fffdf9; stroke: #e4d3c1; stroke-width: 1.6; rx: 26; }
+      .box-soft { fill: url(#panel); stroke: #e2cfbb; stroke-width: 1.5; rx: 28; }
+      .box-accent { fill: #fff6ef; stroke: #e38b61; stroke-width: 1.8; rx: 22; }
+      .box-cool { fill: #f8fbff; stroke: #cbdff6; stroke-width: 1.6; rx: 22; }
+      .box-risk { fill: #fff7e7; stroke: #f0c45c; stroke-width: 1.6; rx: 22; }
+      .line { stroke: #b85d3a; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+      .line-soft { stroke: #c9a68e; stroke-width: 2.4; fill: none; marker-end: url(#arrow); }
+      .divider { stroke: #eadccf; stroke-width: 1.5; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="980" fill="url(#bg)"/>
+
+  <text x="72" y="76" class="title">Attack Surface Mapper</text>
+  <text x="72" y="106" class="subtitle">Local architecture and end-to-end analysis pipeline for APK / manifest attack surface review</text>
+
+  <g filter="url(#shadow)">
+    <rect x="54" y="142" width="1492" height="778" class="box-soft"/>
+  </g>
+
+  <text x="88" y="188" class="section">ENTRY</text>
+  <text x="88" y="224" class="panel-title">Inputs and execution modes</text>
+
+  <rect x="88" y="254" width="300" height="148" class="box-accent"/>
+  <text x="110" y="287" class="box-title">Input artifacts</text>
+  <text x="110" y="316" class="box-text">• APK file</text>
+  <text x="110" y="340" class="box-text">• Decoded AndroidManifest.xml</text>
+  <text x="110" y="364" class="box-text">• Drag-and-drop or file upload</text>
+
+  <rect x="88" y="432" width="300" height="148" class="box-accent"/>
+  <text x="110" y="465" class="box-title">Execution modes</text>
+  <text x="110" y="494" class="box-text">• CLI: java -cp out Main &lt;input&gt;</text>
+  <text x="110" y="518" class="box-text">• Local UI: java -cp out Main</text>
+  <text x="110" y="542" class="box-text">• Built-in HttpServer on 127.0.0.1:8080</text>
+
+  <text x="438" y="188" class="section">BACKEND</text>
+  <text x="438" y="224" class="panel-title">Java analysis pipeline</text>
+
+  <rect x="438" y="254" width="304" height="116" class="box"/>
+  <text x="462" y="287" class="box-title">1. Manifest loading</text>
+  <text x="462" y="315" class="box-text">Main.java</text>
+  <text x="462" y="338" class="box-text">SimpleWebServer.java</text>
+  <text x="462" y="361" class="box-text">ManifestLoader.java</text>
+
+  <rect x="438" y="394" width="304" height="132" class="box"/>
+  <text x="462" y="427" class="box-title">2. Parsing and normalization</text>
+  <text x="462" y="455" class="box-text">BinaryXmlParser.java decodes AXML from APK</text>
+  <text x="462" y="478" class="box-text">ManifestModelParser.java builds AttackSurfaceModel</text>
+  <text x="462" y="501" class="box-text">Extracts components, permissions, filters, data specs</text>
+
+  <rect x="438" y="550" width="304" height="176" class="box-risk"/>
+  <text x="462" y="583" class="box-title">3. Heuristic security analysis</text>
+  <text x="462" y="611" class="box-text">AttackSurfaceAnalyzer.java</text>
+  <text x="462" y="634" class="box-text">Rules include:</text>
+  <text x="482" y="657" class="box-text">• allowBackup=true</text>
+  <text x="482" y="680" class="box-text">• debuggable=true</text>
+  <text x="482" y="703" class="box-text">• exported component without permission</text>
+  <text x="482" y="726" class="box-text">• browsable deep link exposure</text>
+
+  <rect x="438" y="750" width="304" height="138" class="box-risk"/>
+  <text x="462" y="783" class="box-title">4. Score computation</text>
+  <text x="462" y="811" class="box-text">App-level risk:</text>
+  <text x="482" y="834" class="box-text">• allowBackup +12</text>
+  <text x="482" y="857" class="box-text">• debuggable +25</text>
+  <text x="462" y="880" class="box-text">Component risk is summed and capped at 100</text>
+
+  <text x="792" y="188" class="section">MODEL</text>
+  <text x="792" y="224" class="panel-title">Normalized attack surface representation</text>
+
+  <rect x="792" y="254" width="340" height="286" class="box-cool"/>
+  <text x="816" y="287" class="box-title">AttackSurfaceModel</text>
+  <text x="816" y="316" class="box-text">Application configuration</text>
+  <text x="836" y="339" class="box-text">• packageName</text>
+  <text x="836" y="362" class="box-text">• allowBackup / debuggable / backupAgent</text>
+  <text x="816" y="391" class="box-text">Component inventory</text>
+  <text x="836" y="414" class="box-text">• Activity / ActivityAlias / Service</text>
+  <text x="836" y="437" class="box-text">• Receiver / Provider</text>
+  <text x="836" y="460" class="box-text">• exported + exportedDefined</text>
+  <text x="836" y="483" class="box-text">• permission / readPermission / writePermission</text>
+  <text x="816" y="512" class="box-text">Intent-level data</text>
+  <text x="836" y="535" class="box-text">• actions / categories / deep-link data specs</text>
+
+  <rect x="792" y="564" width="340" height="152" class="box-cool"/>
+  <text x="816" y="597" class="box-title">Exported inference logic</text>
+  <text x="816" y="626" class="box-text">If android:exported exists, use it.</text>
+  <text x="816" y="649" class="box-text">Otherwise infer exported=true when an</text>
+  <text x="816" y="672" class="box-text">intent-filter is present; else false.</text>
+  <text x="816" y="701" class="small">This determines whether the component enters the reachable attack surface.</text>
+
+  <rect x="792" y="740" width="340" height="148" class="box-cool"/>
+  <text x="816" y="773" class="box-title">APK-side metadata</text>
+  <text x="816" y="801" class="box-text">Provider path files, manifest presence,</text>
+  <text x="816" y="824" class="box-text">ZIP-level APK structure, and helper metadata</text>
+  <text x="816" y="847" class="box-text">used for FileProvider-style checks</text>
+
+  <text x="1182" y="188" class="section">OUTPUTS</text>
+  <text x="1182" y="224" class="panel-title">Reports and presentation layer</text>
+
+  <rect x="1182" y="254" width="306" height="138" class="box"/>
+  <text x="1206" y="287" class="box-title">Structured outputs</text>
+  <text x="1206" y="316" class="box-text">AttackSurfaceReport.java</text>
+  <text x="1206" y="339" class="box-text">JsonModelWriter.java</text>
+  <text x="1206" y="362" class="box-text">Text report + JSON payload + recommendations</text>
+
+  <rect x="1182" y="416" width="306" height="138" class="box"/>
+  <text x="1206" y="449" class="box-title">Graph generation</text>
+  <text x="1206" y="478" class="box-text">MermaidGraphBuilder.java</text>
+  <text x="1206" y="501" class="box-text">Components linked to exported state,</text>
+  <text x="1206" y="524" class="box-text">permissions, intent filters, and deep links</text>
+
+  <rect x="1182" y="578" width="306" height="178" class="box-accent"/>
+  <text x="1206" y="611" class="box-title">Browser report pages</text>
+  <text x="1206" y="640" class="box-text">web/index.html</text>
+  <text x="1206" y="663" class="box-text">web/components.html</text>
+  <text x="1206" y="686" class="box-text">web/graph.html</text>
+  <text x="1206" y="709" class="box-text">web/findings.html</text>
+  <text x="1206" y="732" class="box-text">web/recommendations.html</text>
+
+  <rect x="1182" y="780" width="306" height="108" class="box-accent"/>
+  <text x="1206" y="813" class="box-title">User-facing results</text>
+  <text x="1206" y="841" class="box-text">Risk score, findings, explanations, fixes,</text>
+  <text x="1206" y="864" class="box-text">component inventory, Mermaid map</text>
+
+  <path d="M388 328 C412 328, 414 312, 438 312" class="line"/>
+  <path d="M590 370 C590 382, 590 382, 590 394" class="line-soft"/>
+  <path d="M590 526 C590 538, 590 538, 590 550" class="line-soft"/>
+  <path d="M590 726 C590 738, 590 738, 590 750" class="line-soft"/>
+  <path d="M742 452 C764 452, 770 398, 792 398" class="line"/>
+  <path d="M742 638 C764 638, 770 640, 792 640" class="line"/>
+  <path d="M742 818 C764 818, 770 814, 792 814" class="line"/>
+  <path d="M1132 398 C1152 398, 1160 322, 1182 322" class="line"/>
+  <path d="M1132 490 C1152 490, 1160 486, 1182 486" class="line"/>
+  <path d="M1132 640 C1152 640, 1160 666, 1182 666" class="line"/>
+  <path d="M1132 814 C1152 814, 1160 834, 1182 834" class="line"/>
+
+  <line x1="88" y1="610" x2="1488" y2="610" class="divider" opacity="0.55"/>
+
+  <rect x="88" y="640" width="300" height="248" class="box-soft"/>
+  <text x="110" y="673" class="box-title">Frontend navigation flow</text>
+  <text x="110" y="702" class="box-text">Upload once, persist report, then navigate across:</text>
+  <text x="130" y="729" class="box-text">1. Overview</text>
+  <text x="130" y="752" class="box-text">2. Components</text>
+  <text x="130" y="775" class="box-text">3. Graph</text>
+  <text x="130" y="798" class="box-text">4. Findings</text>
+  <text x="130" y="821" class="box-text">5. Recommendations</text>
+  <text x="110" y="854" class="small">The UI is local only; the APK never needs to be uploaded to a remote backend.</text>
+
+  <rect x="74" y="42" width="128" height="42" rx="21" fill="url(#accent)"/>
+  <text x="105" y="68" class="chip">ANDROID SECURITY</text>
+</svg>

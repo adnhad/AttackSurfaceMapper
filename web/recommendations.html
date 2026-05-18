@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attack Surface Mapper · Recommendations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="recommendations">
+  <div class="shell">
+    <header class="topbar panel">
+      <div class="brand">
+        <div class="brand-mark">ASM</div>
+        <div>
+          <p class="eyebrow">Android Security</p>
+          <h1>Attack Surface Mapper</h1>
+        </div>
+      </div>
+      <nav class="topnav">
+        <a class="nav-link" href="/index.html">Overview</a>
+        <a class="nav-link" href="/components.html">Components</a>
+        <a class="nav-link" href="/graph.html">Graph</a>
+        <a class="nav-link" href="/findings.html">Findings</a>
+        <a class="nav-link active" href="/recommendations.html">Recommendations</a>
+      </nav>
+      <div id="artifactBadge" class="artifact-badge muted">No artifact loaded</div>
+    </header>
+
+    <main class="page-stack">
+      <section class="panel page-intro">
+        <p class="eyebrow">Recommendations</p>
+        <h2>Use the final page as the hardening checklist for the app owner.</h2>
+      </section>
+
+      <section id="emptyState" class="panel empty-panel">
+        <h3>No analyzed artifact in memory yet.</h3>
+        <p>Go back to the overview page, upload an APK or manifest, and then return here.</p>
+        <a class="quick-link inline" href="/index.html">Go to overview</a>
+      </section>
+
+      <section id="results" class="hidden">
+        <section class="page-split">
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Checklist</p>
+                <h3>Recommendations</h3>
+              </div>
+            </div>
+            <ol id="recommendationsList" class="recommendations"></ol>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Context</p>
+                <h3>Permissions and app flags</h3>
+              </div>
+            </div>
+            <div class="flag-row">
+              <span id="backupFlag" class="soft-tag hidden">allowBackup</span>
+              <span id="debuggableFlag" class="soft-tag hidden">debuggable</span>
+              <span id="fullBackupFlag" class="soft-tag hidden">fullBackupOnly</span>
+            </div>
+            <div id="permissionsChips" class="chip-cloud top-gap"></div>
+          </section>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

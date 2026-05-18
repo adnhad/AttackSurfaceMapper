@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class JsonModelWriter {
@@ -9,6 +10,10 @@ public final class JsonModelWriter {
         return "[" + components.stream().map(JsonModelWriter::componentToJson).collect(Collectors.joining(",")) + "]";
     }
 
+    public static String stringsToJson(Set<String> values) {
+        return "[" + values.stream().map(value -> "\"" + escape(value) + "\"").collect(Collectors.joining(",")) + "]";
+    }
+
     private static String componentToJson(AttackSurfaceModel.Component component) {
         String filters = component.intentFilters.stream()
             .map(JsonModelWriter::filterToJson)
@@ -17,9 +22,13 @@ public final class JsonModelWriter {
             + "\"type\":\"" + escape(component.type.name()) + "\","
             + "\"name\":\"" + escape(component.name) + "\","
             + "\"exported\":" + component.exported + ","
+            + "\"exportedDefined\":" + component.exportedDefined + ","
             + "\"permission\":\"" + escape(component.permission) + "\","
             + "\"readPermission\":\"" + escape(component.readPermission) + "\","
             + "\"writePermission\":\"" + escape(component.writePermission) + "\","
+            + "\"grantUriPermissions\":" + component.grantUriPermissions + ","
+            + "\"pathPermissions\":" + component.pathPermissions + ","
+            + "\"grantUriPermissionPatterns\":" + component.grantUriPermissionPatterns + ","
             + "\"authorities\":[" + component.authorities.stream().map(a -> "\"" + escape(a) + "\"").collect(Collectors.joining(",")) + "],"
             + "\"intentFilters\":[" + filters + "]"
             + "}";

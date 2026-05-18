@@ -3,115 +3,159 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Attack Surface Mapper</title>
+  <title>Attack Surface Mapper · Overview</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
 </head>
-<body>
-  <main class="shell">
-    <section class="hero">
-      <p class="eyebrow">Android Attack Surface Mapper</p>
-      <h1>Drop an APK or decoded manifest and get a readable attack surface report.</h1>
-      <p class="lede">
-        The app extracts exported components, permissions, intent filters, deep links, risky exposure patterns,
-        a surface risk score, concrete remediation advice, and a Mermaid graph you can reuse elsewhere.
-      </p>
-    </section>
-
-    <section class="panel upload-panel">
-      <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload APK or manifest">
-        <input id="fileInput" type="file" accept=".apk,.xml" hidden>
-        <div class="drop-icon">APK</div>
+<body data-page="overview">
+  <div class="shell">
+    <header class="topbar panel">
+      <div class="brand">
+        <div class="brand-mark">ASM</div>
         <div>
-          <h2>Upload target</h2>
-          <p>Drag and drop an <code>.apk</code> or <code>AndroidManifest.xml</code>, or browse from disk.</p>
+          <p class="eyebrow">Android Security</p>
+          <h1>Attack Surface Mapper</h1>
         </div>
-        <div class="actions">
-          <button id="browseButton" class="ghost-button" type="button">Browse file</button>
-          <button id="analyzeButton" class="primary-button" type="button" disabled>Analyze attack surface</button>
+      </div>
+      <nav class="topnav">
+        <a class="nav-link active" href="/index.html">Overview</a>
+        <a class="nav-link" href="/components.html">Components</a>
+        <a class="nav-link" href="/graph.html">Graph</a>
+        <a class="nav-link" href="/findings.html">Findings</a>
+        <a class="nav-link" href="/recommendations.html">Recommendations</a>
+      </nav>
+      <div id="artifactBadge" class="artifact-badge muted">No artifact loaded</div>
+    </header>
+
+    <main class="page-grid">
+      <section class="panel hero-panel">
+        <p class="eyebrow">Upload</p>
+        <h2>Analyze an APK, then navigate the report like a real review workspace.</h2>
+        <p class="lede">
+          Keep the warm readable feel of the original app, but spread the work across dedicated pages:
+          overview, components, graph, findings, and recommendations.
+        </p>
+
+        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload APK or manifest">
+          <input id="fileInput" type="file" accept=".apk,.xml" hidden>
+          <div class="drop-icon">APK</div>
+          <div class="drop-copy">
+            <h3>Drop an APK or decoded manifest</h3>
+            <p>Supported inputs: <code>.apk</code> and <code>AndroidManifest.xml</code>.</p>
+          </div>
+          <div class="actions">
+            <button id="browseButton" class="ghost-button" type="button">Browse file</button>
+            <button id="analyzeButton" class="primary-button" type="button" disabled>Analyze attack surface</button>
+          </div>
         </div>
+
         <p id="selectedFile" class="selected-file">No file selected yet.</p>
-      </div>
-      <p id="status" class="status">Waiting for input.</p>
-    </section>
+        <p id="status" class="status">Waiting for input.</p>
+      </section>
 
-    <section id="results" class="results hidden">
-      <div class="metrics-grid">
-        <article class="panel metric-card">
-          <p class="metric-label">Surface Risk</p>
-          <div class="metric-value-wrap">
-            <span id="riskScore" class="metric-value">0</span>
-            <span class="metric-scale">/100</span>
-          </div>
-          <p id="riskLevel" class="metric-chip metric-chip-low">LOW</p>
-        </article>
-
-        <article class="panel summary-card">
-          <p class="metric-label">What we found</p>
-          <div id="summaryStats" class="summary-stats"></div>
-        </article>
-      </div>
-
-      <div class="report-grid">
-        <article class="panel">
-          <div class="section-heading">
-            <h2>Risky patterns</h2>
-            <p>Why the current exposure matters.</p>
-          </div>
-          <div id="findingsList" class="stack"></div>
-        </article>
-
-        <article class="panel">
-          <div class="section-heading">
-            <h2>Recommendations</h2>
-            <p>Concrete fixes to reduce attack surface.</p>
-          </div>
-          <ol id="recommendationsList" class="recommendations"></ol>
-        </article>
-      </div>
-
-      <div class="report-grid graph-row">
-        <article class="panel">
-          <div class="section-heading">
-            <h2>Component map</h2>
-            <p>Components, intents and permissions rendered from the generated Mermaid graph.</p>
-          </div>
-          <div id="graphRender" class="graph-render">Graph will appear after analysis.</div>
-        </article>
-
-        <article class="panel">
-          <div class="section-heading">
-            <h2>Mermaid source</h2>
-            <p>Ready to paste into docs or reports.</p>
-          </div>
-          <pre id="mermaidSource" class="code-block"></pre>
-        </article>
-      </div>
-
-      <article class="panel">
-        <div class="section-heading">
-          <h2>Exported components</h2>
-          <p>Quick inventory of exposed entry points and their guards.</p>
+      <section id="emptyState" class="panel info-panel">
+        <p class="eyebrow">Workflow</p>
+        <h3>What happens after analysis?</h3>
+        <div class="info-steps">
+          <article class="info-card">
+            <strong>Overview</strong>
+            <p>Score, app flags, exposed surface summary, and top risk story.</p>
+          </article>
+          <article class="info-card">
+            <strong>Components</strong>
+            <p>Search and filter activities, services, receivers, and providers.</p>
+          </article>
+          <article class="info-card">
+            <strong>Graph</strong>
+            <p>Rendered Mermaid map plus raw graph code for export.</p>
+          </article>
+          <article class="info-card">
+            <strong>Findings</strong>
+            <p>Risk cards sorted by severity with explanations and fixes.</p>
+          </article>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-            <tr>
-              <th>Type</th>
-              <th>Name</th>
-              <th>Exported</th>
-              <th>Permission</th>
-              <th>Intent / data</th>
-            </tr>
-            </thead>
-            <tbody id="componentsTable"></tbody>
-          </table>
+      </section>
+
+      <section id="results" class="results hidden">
+        <div class="overview-grid">
+          <article class="panel score-card">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Risk score</p>
+                <h3>Surface risk</h3>
+              </div>
+              <span id="riskLevel" class="metric-chip metric-chip-low">LOW</span>
+            </div>
+            <div class="score-wrap">
+              <div class="score-ring">
+                <div class="score-ring-inner">
+                  <span id="riskScore" class="score-value">0</span>
+                  <span class="score-scale">/100</span>
+                </div>
+              </div>
+            </div>
+            <div id="severityBreakdown" class="severity-breakdown"></div>
+          </article>
+
+          <article class="panel summary-card">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Overview</p>
+                <h3>Attack surface summary</h3>
+              </div>
+            </div>
+            <div id="summaryStats" class="summary-stats"></div>
+          </article>
+
+          <article class="panel package-card">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Artifact</p>
+                <h3 id="packageName">No package yet</h3>
+              </div>
+            </div>
+            <p id="artifactSource" class="muted-copy">Analyze an artifact to populate this section.</p>
+            <div class="flag-row">
+              <span id="backupFlag" class="soft-tag hidden">allowBackup</span>
+              <span id="debuggableFlag" class="soft-tag hidden">debuggable</span>
+              <span id="fullBackupFlag" class="soft-tag hidden">fullBackupOnly</span>
+            </div>
+            <div class="section-divider"></div>
+            <div id="permissionsChips" class="chip-cloud"></div>
+          </article>
         </div>
-      </article>
-    </section>
-  </main>
+
+        <div class="overview-grid secondary">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Top finding</p>
+                <h3>Why this is risky</h3>
+              </div>
+            </div>
+            <div id="leadInsight" class="lead-insight"></div>
+          </article>
+
+          <article class="panel quick-panel">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Next pages</p>
+                <h3>Open the report sections</h3>
+              </div>
+            </div>
+            <div class="quick-links">
+              <a class="quick-link" href="/components.html">Open components</a>
+              <a class="quick-link" href="/graph.html">Open graph</a>
+              <a class="quick-link" href="/findings.html">Open findings</a>
+              <a class="quick-link" href="/recommendations.html">Open recommendations</a>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
 
   <script type="module" src="/app.js"></script>
 </body>

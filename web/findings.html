@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attack Surface Mapper · Findings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="findings">
+  <div class="shell">
+    <header class="topbar panel">
+      <div class="brand">
+        <div class="brand-mark">ASM</div>
+        <div>
+          <p class="eyebrow">Android Security</p>
+          <h1>Attack Surface Mapper</h1>
+        </div>
+      </div>
+      <nav class="topnav">
+        <a class="nav-link" href="/index.html">Overview</a>
+        <a class="nav-link" href="/components.html">Components</a>
+        <a class="nav-link" href="/graph.html">Graph</a>
+        <a class="nav-link active" href="/findings.html">Findings</a>
+        <a class="nav-link" href="/recommendations.html">Recommendations</a>
+      </nav>
+      <div id="artifactBadge" class="artifact-badge muted">No artifact loaded</div>
+    </header>
+
+    <main class="page-stack">
+      <section class="panel page-intro">
+        <p class="eyebrow">Findings</p>
+        <h2>Review each risky pattern as a dedicated card with severity, explanation and remediation.</h2>
+      </section>
+
+      <section id="emptyState" class="panel empty-panel">
+        <h3>No analyzed artifact in memory yet.</h3>
+        <p>Go back to the overview page, upload an APK or manifest, and then return here.</p>
+        <a class="quick-link inline" href="/index.html">Go to overview</a>
+      </section>
+
+      <section id="results" class="hidden">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Severity mix</p>
+              <h3>Findings overview</h3>
+            </div>
+            <div id="findingsMeta" class="findings-meta"></div>
+          </div>
+          <div id="severityBreakdown" class="severity-breakdown compact"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Cards</p>
+              <h3>Detected risky patterns</h3>
+            </div>
+          </div>
+          <div id="findingsList" class="findings-grid"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
